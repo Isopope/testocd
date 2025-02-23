@@ -7,19 +7,49 @@ use Illuminate\Http\Request;
 use App\Models\Person;
 use Illuminate\Support\Facades\Auth;
 
-class PersonController extends Controller
+use Illuminate\Routing\Controller as BaseController;
+
+class PersonController extends BaseController
 {
-    //
-    public function index(){
+
+    public function __construct(){
+        $this->middleware('auth')->only(['create', 'store']);
+    }
+
+    
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
         $people=Person::with('creator')->get();
         return view('people.index', compact('people'));
     }
-    
-    public function create(){
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
         return view('people.create');
     }
 
-    public function show($id){
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validation=$this->inputValidation($request);
+        $person=Person::create($validation);
+        return redirect()->route('people.index', $person->id);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($id)
+    {
         $person=Person::with(['creator','parents','children'])->findOrFail($id);
         return view('people.show', compact('person'));
     }
@@ -61,9 +91,27 @@ class PersonController extends Controller
 
     }
 
-    public function store(Request $request){
-        $validation=$this->inputValidation($request);
-        $person=Person::create($validation);
-        return redirect()->route('people.index', $person->id);
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
     }
 }

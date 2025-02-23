@@ -14,15 +14,15 @@ class Person extends Model
         'middle_names',
         'date_of_birth'
     ];
-    public function children(){
-        return $this->hasMany(Relationship::class, 'parent_id');
-    }
-
-    public function parents(){
-        return $this->hasMany(Relationship::class, 'child_id');
-    }
-
-    public function userCreator(){
+    public function creator() {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function parents() {
+        return $this->belongsToMany(Person::class, 'relationships', 'child_id', 'parent_id');
+    }
+
+    public function children() {
+        return $this->belongsToMany(Person::class, 'relationships', 'parent_id', 'child_id');
     }
 }
