@@ -12,9 +12,9 @@ use Illuminate\Routing\Controller as BaseController;
 class PersonController extends BaseController
 {
 
-    public function __construct(){
-        $this->middleware('auth')->only(['create', 'store']);
-    }
+    // public function __construct(){
+    //     $this->middleware('auth')->only(['create', 'store']);
+    // }
 
     
 
@@ -62,7 +62,7 @@ class PersonController extends BaseController
             'birth_name' => 'nullable|string|max:255',
             'date_of_birth' => 'nullable|date',
         ]);
-        $validation['created_by']=Auth::user()->id;
+        $validation['created_by']=auth()->id;
         $validation['first_name']=ucfirst(strtolower($validation['first_name']));
         $validation['last_name']=strtoupper($validation['last_name']);
         if(!empty($validation['middle_name'])){
